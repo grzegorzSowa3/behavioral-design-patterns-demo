@@ -8,7 +8,7 @@ import java.util.UUID;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-class OrderPosition {
+public class OrderPosition {
 
     private UUID id;
     private Product product;

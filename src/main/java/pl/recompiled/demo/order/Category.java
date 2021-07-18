@@ -1,5 +1,5 @@
 package pl.recompiled.demo.order;
 
-enum Category {
+public enum Category {
     ELECTRONICS, FASHION, HEALTH, ENTERTAINMENT
 }

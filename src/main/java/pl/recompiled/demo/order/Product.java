@@ -8,7 +8,7 @@ import java.util.UUID;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-class Product {
+public class Product {
 
     private UUID id;
     private String name;
