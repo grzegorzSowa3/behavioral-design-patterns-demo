@@ -1,23 +1,26 @@
 package pl.recompiled.demo.order;
 
 import lombok.RequiredArgsConstructor;
-import pl.recompiled.demo.order.mail.MailService;
-import pl.recompiled.demo.order.marketing.MarketingService;
-import pl.recompiled.demo.order.payment.PaymentService;
 
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
-public class OrderFacade {
+public class OrderFacade implements Publisher<OrderClosedEvent> {
 
     private final OrderRepository orderRepository;
     private final ProductRepository productRepository;
     private final PriceService priceService;
-    private final MailService mailService;
-    private final MarketingService marketingService;
-    private final PaymentService paymentService;
+    private final List<Subscriber<OrderClosedEvent>> orderClosedSubscribers = new ArrayList<>();
+
+    @Override
+    public void subscribe(Subscriber<OrderClosedEvent> subscriber) {
+        orderClosedSubscribers.add(subscriber);
+    }
 
     // command part
 
@@ -45,10 +48,10 @@ public class OrderFacade {
                 .orElseThrow(EntityNotFoundException::new);
         order.close();
 
-        // many calls, many dependencies
-        mailService.notifyOrderClosed(orderId);
-        marketingService.notifyOrderClosed(orderId);
-        paymentService.notifyOrderClosed(orderId);
+        final OrderClosedEvent event = new OrderClosedEvent(orderId, Instant.now().getEpochSecond());
+        for (var subscriber : orderClosedSubscribers) {
+            subscriber.onNext(event);
+        }
 
     }
 
