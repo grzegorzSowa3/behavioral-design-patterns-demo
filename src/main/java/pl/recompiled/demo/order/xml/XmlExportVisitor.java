@@ -29,7 +29,7 @@ class XmlExportVisitor implements Visitor {
                         """.formatted(order.getId(), order.getClientId())
         );
         order.getPositions()
-                .forEach(this::doForOrderPosition);
+                .forEach(position -> position.accept(this));
         result.append(
                 """
                             </positions>
@@ -46,7 +46,7 @@ class XmlExportVisitor implements Visitor {
                             <id>%s</id>
                             """.formatted(position.getId())
         );
-        doForProduct(position.getProduct());
+        position.getProduct().accept(this);
         result.append(
                 """
                         <quantity>%d</quantity>
