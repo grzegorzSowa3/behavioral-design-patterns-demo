@@ -8,7 +8,7 @@ import java.util.UUID;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-class OrderPosition {
+public class OrderPosition {
 
     private UUID id;
     private Product product;
@@ -22,14 +22,8 @@ class OrderPosition {
         return position;
     }
 
-    String toXml() {
-        return """
-                <order-position>
-                    <id>%s</id>
-                    %s
-                    <quantity>%d</quantity>
-                </order-position>
-                """.formatted(id, product.toXml(), quantity);
+    public void accept(Visitor visitor) {
+        visitor.doForOrderPosition(this);
     }
 
 }

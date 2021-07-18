@@ -8,7 +8,7 @@ import java.util.UUID;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-class Product {
+public class Product {
 
     private UUID id;
     private String name;
@@ -24,15 +24,8 @@ class Product {
         return product;
     }
 
-    String toXml() {
-        return """
-                <product>
-                   <id>%s</id>
-                   <category>%s</category>
-                   <name>%s</name>
-                   <price>%d</price>
-                </product>
-                """.formatted(id, category, name, price);
+    public void accept(Visitor visitor) {
+        visitor.doForProduct(this);
     }
 
 }

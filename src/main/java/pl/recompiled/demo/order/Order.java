@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-class Order {
+public class Order {
 
     private UUID id;
     private UUID clientId;
@@ -48,24 +48,12 @@ class Order {
         this.positions.add(orderPosition);
     }
 
-    Set<OrderPosition> getPositions() {
+    public Set<OrderPosition> getPositions() {
         return Collections.unmodifiableSet(positions);
     }
 
-    String toXml() {
-        return """
-                <order>
-                    <id>%s</id>
-                    <clientId>%s</clientId>
-                    <positions>
-                    %s
-                    </positions>
-                </order>
-                """.formatted(id, clientId,
-                positions.stream()
-                .map(OrderPosition::toXml)
-                .collect(Collectors.joining())
-                );
+    public void accept(Visitor visitor) {
+        visitor.doForOrder(this);
     }
 
 }
